@@ -1,13 +1,13 @@
 .PHONY: macos
-macos: link homebrew brew_bundle font
+macos: macos_init link homebrew brew_bundle font
 
 .PHONY: macos_init
 macos_init:
-	source bin/macos_init.sh
+	bin/macos_init.sh
 
 .PHONY: homebrew
 homebrew:
-	source bin/homebrew.sh
+	bin/homebrew.sh
 
 .PHONY: brew_bundle
 brew_bundle_biz:
@@ -19,12 +19,12 @@ source:
 
 .PHONY: link
 link:
-	source bin/link.sh
+	bin/link.sh
 
 .PHONY: font
 font:
-	source bin/font.sh
+	bin/font.sh
 
 .PHONY: sdkman
 sdkman:
-	source bin/sdkman.sh
+	bin/sdkman.sh
