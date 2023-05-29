@@ -1,0 +1,8 @@
+*
+!*/
+!.gitignore
+!git/*
+!nvim/*
+!zsh/*
+!nushell/*
+!starship.toml
