@@ -2,6 +2,9 @@ test -d ~/.linuxbrew && eval "$(~/.linuxbrew/bin/brew shellenv)"
 test -d /home/linuxbrew/.linuxbrew && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 test -d /opt/homebrew/ && eval "$(/opt/homebrew/bin/brew shellenv)"
 
+export CARGO_HOME=$HOME/.cargo
+export PATH=$CARGO_HOME/bin:$PATH
+
 plugins=(git ssh-agent)
 
 eval "$(starship init zsh)"
