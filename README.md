@@ -21,5 +21,5 @@ python3 bin/link-skills.py
 python3 bin/link-skills.py --apply
 ```
 
-既存ファイルは上書きしません。同期方法・APM依存・旧リポジトリの扱いは
+既存ファイルは上書きしません。同期方法・外部Skill・旧リポジトリの扱いは
 [Skillsの運用ガイド](skills/README.md) を参照してください。
