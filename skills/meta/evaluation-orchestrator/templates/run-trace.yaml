@@ -1,0 +1,45 @@
+version: "1.0"
+run_id: ""
+evaluation_id: ""
+started_at: ""
+completed_at: ""
+source_snapshot_id: ""
+package_version: ""
+
+stage_executions:
+  - stage_id: ""
+    attempt: 1
+    status: pending|ready|running|passed|failed|skipped|escalated
+    started_at: ""
+    completed_at: ""
+    visible_input_refs: []
+    hidden_input_refs: []
+    output_refs: []
+    assertion_results: []
+    failure_reason: ""
+    routed_to: ""
+    human_intervention: false
+
+metrics:
+  source_fidelity: null
+  unsupported_claim_rate: null
+  material_issue_recall: null
+  material_false_positive_rate: null
+  actionability_rate: null
+  blind_only_discovery_count: null
+  dissent_preservation_rate: null
+  context_tokens: null
+  execution_cost: null
+
+judge:
+  verdict: pass|repair|escalate|not_run
+  threshold_results: []
+  material_failures: []
+
+failure_localization:
+  earliest_responsible_stage: ""
+  evidence: []
+  downstream_symptoms: []
+
+improvement_refs: []
+rollback_ref: ""

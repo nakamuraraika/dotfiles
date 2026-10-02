@@ -1,0 +1,60 @@
+version: "1.0"
+evaluation_id: catalog-domain-model-review
+status: active
+purpose:
+  target_decision: Decide whether the catalog domain model is safe to implement and migrate.
+  action_supported: Approve, revise, or reject the proposed model boundaries and derivation rules.
+  unit_of_evaluation: Material domain-model decision.
+  non_goals: [SQL tuning, UI visual design]
+target:
+  identity: catalog-model-design
+  version: draft-7
+  scope: [Work, Arc, ReleaseUnit, representative metadata, migration]
+  exclusions: [billing, authentication]
+  primary_sources:
+    - source_id: SRC-DESIGN
+      title: Catalog model design
+      location: synthetic://catalog-design
+      authority: primary
+      immutable_snapshot: sha256:example
+stakeholders:
+  - id: STAKEHOLDER-EDITOR
+    role: catalog editor
+    interests: [predictable representative metadata, safe reordering]
+    consequences_if_wrong: [unintended display changes, broken SEO identity]
+consequence_model:
+  false_positive_cost: Unnecessary model complexity and migration work.
+  false_negative_cost: Hidden coupling becomes production behavior.
+  irreversible_failures: [published identity changes without auditability]
+  blast_radius: broad
+  reversibility: hard
+authority:
+  evaluator_may: [recommend model changes, request evidence, block approval]
+  evaluator_must_not: [invent unstated business policy]
+  human_decisions_required: [choose whether representative metadata is editorial or derived]
+evidence_policy:
+  available: [design document, examples, rejected alternatives]
+  unavailable: [production edit history]
+  acceptable_inference: Mark every reconstructed premise as interpretation or hypothesis.
+  citation_required_for: [observed design, rationale, rejected alternatives]
+  unresolved_evidence_treatment: preserve_as_unknown
+constraints:
+  time_budget: one review run
+  cost_budget: bounded
+  safety_constraints: []
+  privacy_constraints: []
+  execution_constraints: [no production migration]
+output_contract:
+  consumers: [domain design team]
+  required_actions: [approval decision, required revisions, distinguishing tests]
+  required_artifacts: [evaluation-ir.yaml, final-evaluation.md]
+  severity_scale: critical|high|medium|low|informational
+  recommendation_horizon: near_term
+judge_thresholds:
+  minimum_source_fidelity: 0.95
+  maximum_unsupported_claim_rate: 0.05
+  minimum_material_issue_recall: 0.80
+  maximum_material_false_positive_rate: 0.10
+  minimum_actionability_rate: 0.80
+  require_blind_only_discovery_report: true
+  require_dissent_preservation: true

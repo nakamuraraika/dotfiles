@@ -1,0 +1,43 @@
+version: "1.0"
+candidate_id: IMPROVEMENT-001
+status: proposed|experimental|promoted_target_specific|promoted_cross_target|rejected|rolled_back
+scope: current_run|target_specific|cross_target|core_invariant
+
+trigger:
+  run_ids: []
+  failure_pattern: ""
+  evidence_refs: []
+  recurrence_count: 1
+
+earliest_responsible_stage: ""
+change:
+  artifact_or_contract: ""
+  description: ""
+  rationale: ""
+  expected_benefit: ""
+  expected_cost: ""
+  context_growth: ""
+
+safety:
+  preserved_invariants: []
+  prohibited_regressions: []
+  rollback_steps: []
+
+regression_plan:
+  golden_case_ids: []
+  boundary_case_ids: []
+  prior_failure_case_ids: []
+  holdout_case_ids: []
+  comparison_metrics: []
+
+results:
+  replay_report_ref: ""
+  metric_delta: {}
+  regressions: []
+  human_intervention_delta: null
+
+promotion:
+  decision: promote|retain_experimental|reject|rollback|not_evaluated
+  authority: ""
+  rationale: ""
+  next_scope: ""

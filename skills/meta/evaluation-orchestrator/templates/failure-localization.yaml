@@ -1,0 +1,10 @@
+version: "1.0"
+run_id: ""
+repairable: true
+earliest_responsible_stage: ""
+root_cause: ""
+evidence_refs: []
+downstream_symptoms: []
+rejected_localizations: []
+recommended_repair_scope: ""
+human_authority_required: false

@@ -1,0 +1,69 @@
+version: "1.0"
+evaluation_id: ""
+status: draft|active|completed|superseded
+
+purpose:
+  target_decision: ""
+  action_supported: ""
+  unit_of_evaluation: ""
+  non_goals: []
+
+target:
+  identity: ""
+  version: ""
+  scope: []
+  exclusions: []
+  primary_sources:
+    - source_id: SRC-001
+      title: ""
+      location: ""
+      authority: primary|secondary|contextual
+      immutable_snapshot: ""
+
+stakeholders:
+  - id: STAKEHOLDER-001
+    role: ""
+    interests: []
+    consequences_if_wrong: []
+
+consequence_model:
+  false_positive_cost: ""
+  false_negative_cost: ""
+  irreversible_failures: []
+  blast_radius: local|bounded|broad|systemic
+  reversibility: easy|moderate|hard|irreversible
+
+authority:
+  evaluator_may: []
+  evaluator_must_not: []
+  human_decisions_required: []
+
+evidence_policy:
+  available: []
+  unavailable: []
+  acceptable_inference: ""
+  citation_required_for: []
+  unresolved_evidence_treatment: preserve_as_unknown
+
+constraints:
+  time_budget: ""
+  cost_budget: ""
+  safety_constraints: []
+  privacy_constraints: []
+  execution_constraints: []
+
+output_contract:
+  consumers: []
+  required_actions: []
+  required_artifacts: []
+  severity_scale: critical|high|medium|low|informational
+  recommendation_horizon: immediate|near_term|long_term
+
+judge_thresholds:
+  minimum_source_fidelity: 0.95
+  maximum_unsupported_claim_rate: 0.05
+  minimum_material_issue_recall: 0.80
+  maximum_material_false_positive_rate: 0.10
+  minimum_actionability_rate: 0.80
+  require_blind_only_discovery_report: true
+  require_dissent_preservation: true

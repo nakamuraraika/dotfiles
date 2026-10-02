@@ -1,0 +1,18 @@
+version: "1.0"
+run_id: ""
+candidate_id: ""
+available: true
+case_results:
+  - case_id: ""
+    suite: golden|boundary|prior_failure|holdout
+    baseline_result: ""
+    candidate_result: ""
+    regression: false
+metric_delta:
+  quality: null
+  cost: null
+  context_growth: null
+  human_intervention: null
+regressions: []
+inconclusive_results: []
+recommendation: promote|retain_experimental|reject|rollback

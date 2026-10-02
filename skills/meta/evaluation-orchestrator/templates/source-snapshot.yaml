@@ -1,0 +1,10 @@
+version: "1.0"
+snapshot_id: ""
+created_at: ""
+immutable: true
+sources:
+  - source_id: SRC-001
+    location: ""
+    content_hash: ""
+    authority: primary|secondary|contextual
+    captured_at: ""

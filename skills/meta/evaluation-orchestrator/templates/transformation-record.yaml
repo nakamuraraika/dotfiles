@@ -1,0 +1,26 @@
+version: "1.0"
+transformation_id: ""
+run_id: ""
+created_at: ""
+
+before:
+  artifact_ref: ""
+  observed_failure: ""
+  evidence: []
+
+after:
+  artifact_ref: ""
+  change_summary: ""
+  changed_stage: ""
+  changed_contract_or_rule: ""
+
+causal_claim:
+  why_change_should_fix_failure: ""
+  epistemic_class: hypothesis|interpretation|observation
+  falsification_conditions: []
+
+validation:
+  replayed_case_ids: []
+  metric_delta: {}
+  regressions: []
+  verdict: improved|neutral|regressed|inconclusive

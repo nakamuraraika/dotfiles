@@ -1,0 +1,266 @@
+version: "2.0"
+workflow_id: ""
+mode: orchestrate_evaluation
+contract_registry: templates/agent-contracts.yaml
+
+artifacts:
+  evaluation_charter: work/evaluation-charter.yaml
+  source_snapshot_manifest: work/source-snapshot.yaml
+  source_ir_v0: work/evaluation-ir.v0.yaml
+  adversarial_findings: work/findings.adversarial.yaml
+  advocate_findings: work/findings.advocate.yaml
+  blind_findings: work/findings.blind.yaml
+  integrated_findings: work/findings.integrated.yaml
+  evaluation_ir_v1: work/evaluation-ir.v1.yaml
+  epistemic_change_log: work/epistemic-change-log.yaml
+  evaluation_cases: work/evaluation-cases/
+  holdout_case_expectations: work/holdout-case-expectations/
+  evaluation_run_instructions: work/evaluation-run-instructions.md
+  evaluation_run_plan: work/evaluation-run-plan.yaml
+  final_evaluation: work/final-evaluation.md
+  judge_report: work/judge-report.yaml
+  failure_localization: work/failure-localization.yaml
+  improvement_candidates: work/improvement-candidates.yaml
+  regression_replay_report: work/regression-replay-report.yaml
+  promotion_decision: work/promotion-decision.yaml
+  run_trace: work/run-trace.yaml
+
+published_artifacts:
+  evaluation-charter.yaml: evaluation_charter
+  evaluation-ir.yaml: evaluation_ir_v1
+  context-topology.yaml: templates/context-topology.yaml
+  orchestration.yaml: templates/orchestration.yaml
+  evaluation-run-plan.yaml: evaluation_run_plan
+  run-trace.yaml: run_trace
+  improvement-candidates.yaml: improvement_candidates
+
+stages:
+  - id: source_normalizer
+    role: reconstructor
+    contract_ref: source_normalizer
+    depends_on: []
+    visible_inputs: [source_materials, evaluation_charter]
+    hidden_inputs: [seeded_concerns, downstream_outputs]
+    outputs: [source_snapshot_manifest, source_ir_v0]
+    success_assertions:
+      - primary_source_snapshot_is_immutable
+      - all_material_source_items_have_refs
+      - decision_records_are_present
+      - epistemic_classes_are_explicit
+      - unknowns_are_preserved
+    retry_limit: 2
+    failure_route: source_normalizer
+    escalate_when: source_material_is_missing_or_contradictory
+
+  - id: adversarial_extractor
+    role: adversary
+    contract_ref: adversarial_extractor
+    depends_on: [source_normalizer]
+    visible_inputs: [source_materials, source_snapshot_manifest, evaluation_charter, source_ir_v0]
+    hidden_inputs: [advocate_findings, blind_findings]
+    outputs: [adversarial_findings]
+    success_assertions:
+      - primary_sources_were_read_directly
+      - source_ir_was_used_only_as_index
+      - independent_source_discovery_is_reported
+      - material_criticisms_have_scenario_test_or_structural_alternative
+      - irreversible_failures_are_identified_or_explicitly_absent
+    retry_limit: 2
+    failure_route: adversarial_extractor
+
+  - id: advocate_extractor
+    role: advocate
+    contract_ref: advocate_extractor
+    depends_on: [source_normalizer]
+    visible_inputs: [source_materials, source_snapshot_manifest, evaluation_charter, source_ir_v0]
+    hidden_inputs: [adversarial_findings, blind_findings]
+    outputs: [advocate_findings]
+    success_assertions:
+      - primary_sources_were_read_directly
+      - source_ir_was_used_only_as_index
+      - independent_source_discovery_is_reported
+      - strongest_validity_conditions_are_explicit
+      - defenses_include_required_evidence_and_collapse_conditions
+    retry_limit: 2
+    failure_route: advocate_extractor
+
+  - id: blind_coverage_explorer
+    role: independent_evaluator
+    contract_ref: blind_coverage_explorer
+    depends_on: [source_normalizer]
+    visible_inputs: [source_materials, source_snapshot_manifest, neutral_evaluation_purpose]
+    hidden_inputs: [source_ir_v0, seeded_concerns, adversarial_findings, advocate_findings, evaluation_run_instructions]
+    outputs: [blind_findings]
+    success_assertions:
+      - source_section_coverage_is_reported
+      - lifecycle_coverage_is_reported
+      - independent_dimensions_are_reported
+      - seeded_concerns_were_not_visible
+    retry_limit: 2
+    failure_route: blind_coverage_explorer
+
+  - id: finding_integrator
+    role: integrator
+    contract_ref: finding_integrator
+    depends_on: [adversarial_extractor, advocate_extractor, blind_coverage_explorer]
+    visible_inputs: [source_materials, source_ir_v0, adversarial_findings, advocate_findings, blind_findings]
+    hidden_inputs: []
+    outputs: [integrated_findings]
+    success_assertions:
+      - all_findings_have_stable_ids
+      - duplicates_are_clustered_by_claim_mechanism_consequence_and_evidence
+      - dissent_is_preserved
+      - blind_only_findings_are_marked
+      - origin_agents_and_source_refs_are_preserved
+    retry_limit: 2
+    failure_route: finding_integrator
+
+  - id: epistemic_reclassifier
+    role: epistemic_auditor
+    contract_ref: epistemic_reclassifier
+    depends_on: [finding_integrator]
+    visible_inputs: [source_materials, source_ir_v0, integrated_findings]
+    hidden_inputs: []
+    outputs: [evaluation_ir_v1, epistemic_change_log]
+    success_assertions:
+      - observations_are_source_grounded
+      - merged_items_use_least_certain_defensible_class
+      - agent_consensus_does_not_promote_fact_status
+      - decision_records_link_attack_defense_verification_and_alternatives
+    retry_limit: 2
+    failure_route: source_normalizer|finding_integrator|epistemic_reclassifier
+
+  - id: evaluation_case_designer
+    role: case_designer
+    contract_ref: evaluation_case_designer
+    depends_on: [epistemic_reclassifier]
+    visible_inputs: [source_materials, evaluation_charter, evaluation_ir_v1, integrated_findings]
+    hidden_inputs: []
+    outputs: [evaluation_cases, holdout_case_expectations]
+    success_assertions:
+      - case_generation_axes_are_derived_from_target
+      - normal_boundary_ambiguous_adversarial_and_regression_cases_are_risk_covered
+      - each_case_has_expected_result_and_expected_trace
+      - holdout_expectations_are_separated
+    retry_limit: 2
+    failure_route: evaluation_case_designer
+
+  - id: evaluation_run_planner
+    role: evaluation_run_planner
+    contract_ref: evaluation_run_planner
+    depends_on: [evaluation_case_designer]
+    visible_inputs: [evaluation_charter, evaluation_ir_v1, integrated_findings, evaluation_cases]
+    hidden_inputs: [holdout_case_expectations]
+    outputs: [evaluation_run_instructions, evaluation_run_plan]
+    success_assertions:
+      - target_specific_questions_are_generated_from_decision_records
+      - evidence_comparison_and_actionability_are_enforced
+      - arbitrary_count_box_filling_is_avoided
+      - completion_gate_is_explicit
+    retry_limit: 2
+    failure_route: source_normalizer|epistemic_reclassifier|evaluation_case_designer|evaluation_run_planner
+
+  - id: final_evaluator
+    role: evaluator
+    contract_ref: final_evaluator
+    depends_on: [evaluation_run_planner]
+    visible_inputs: [source_materials, evaluation_run_instructions, evaluation_run_plan]
+    hidden_inputs: [holdout_case_expectations, judge_report, improvement_candidates]
+    outputs: [final_evaluation]
+    success_assertions:
+      - evaluator_contract_is_followed
+      - material_claims_are_cited
+      - uncertainty_and_dissent_are_reported
+      - material_criticism_has_action_test_or_alternative
+    retry_limit: 1
+    failure_route: final_evaluator|evaluation_run_planner
+
+  - id: blinded_evaluation_judge
+    role: judge
+    contract_ref: blinded_evaluation_judge
+    depends_on: [final_evaluator]
+    visible_inputs: [source_materials, final_evaluation, evaluation_cases, holdout_case_expectations, scoring_rubric, evaluation_charter]
+    hidden_inputs: [final_evaluator_self_grade, improvement_candidates]
+    outputs: [judge_report, run_trace]
+    success_assertions:
+      - provenance_is_verified
+      - false_positive_and_negative_risks_are_assessed
+      - independent_discovery_is_measured
+      - charter_thresholds_are_evaluated
+    retry_limit: 1
+    failure_route: blinded_evaluation_judge|evaluation_case_designer
+
+  - id: failure_localizer
+    role: failure_analyst
+    contract_ref: failure_localizer
+    depends_on: [blinded_evaluation_judge]
+    when: judge_report.verdict != pass or outer_loop_requested == true
+    visible_inputs: [run_trace, judge_report, evaluation_charter, evaluation_ir_v1, integrated_findings, evaluation_run_plan, final_evaluation]
+    hidden_inputs: []
+    outputs: [failure_localization]
+    success_assertions:
+      - earliest_responsible_stage_is_identified
+      - downstream_symptoms_are_not_mistaken_for_root_causes
+      - evidence_for_localization_is_recorded
+    retry_limit: 1
+    failure_route: failure_localizer
+
+  - id: improvement_candidate_generator
+    role: improvement_planner
+    contract_ref: improvement_candidate_generator
+    depends_on: [failure_localizer]
+    when: failure_localization.repairable == true
+    visible_inputs: [failure_localization, run_trace, judge_report, evaluation_cases]
+    hidden_inputs: [holdout_case_expectations]
+    outputs: [improvement_candidates]
+    success_assertions:
+      - change_targets_earliest_responsible_stage
+      - scope_is_not_overgeneralized
+      - rollback_and_regression_plan_are_present
+    retry_limit: 1
+    failure_route: improvement_candidate_generator
+
+  - id: regression_replay
+    role: regression_runner
+    contract_ref: regression_replay
+    depends_on: [improvement_candidate_generator]
+    when: improvement_candidates.contains_testable_candidate == true
+    visible_inputs: [improvement_candidates, evaluation_cases, holdout_case_expectations, run_trace]
+    hidden_inputs: []
+    outputs: [regression_replay_report]
+    success_assertions:
+      - golden_boundary_prior_failure_and_holdout_cases_are_replayed
+      - quality_cost_context_and_intervention_deltas_are_recorded
+      - regressions_are_reported
+    retry_limit: 1
+    failure_route: regression_replay|improvement_candidate_generator
+
+  - id: improvement_promotion_judge
+    role: promotion_judge
+    contract_ref: improvement_promotion_judge
+    depends_on: [regression_replay]
+    when: regression_replay_report.available == true
+    visible_inputs: [improvement_candidates, regression_replay_report, evaluation_charter, run_trace]
+    hidden_inputs: []
+    outputs: [promotion_decision]
+    success_assertions:
+      - promotion_is_evidence_based
+      - one_off_tactics_are_not_promoted_to_core_invariants
+      - rollback_path_is_preserved
+    retry_limit: 1
+    failure_route: improvement_promotion_judge
+
+parallel_groups:
+  - id: perspective_extraction
+    stages: [adversarial_extractor, advocate_extractor, blind_coverage_explorer]
+    immutable_input_snapshot: true
+    cross_agent_visibility: false
+
+routing:
+  max_total_retries: 12
+  earliest_responsible_stage: true
+  stop_on:
+    - retry_budget_exhausted
+    - human_authority_required
+    - missing_primary_evidence
+    - judge_pass_threshold_met_and_outer_loop_not_requested

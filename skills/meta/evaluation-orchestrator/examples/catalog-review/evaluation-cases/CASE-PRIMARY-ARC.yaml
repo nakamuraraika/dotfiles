@@ -1,0 +1,52 @@
+version: "1.0"
+case_id: CASE-PRIMARY-ARC
+title: Prepend a prequel without changing the representative campaign image
+type: boundary
+holdout: false
+materiality: high
+provenance:
+  source_refs: []
+  generated_from_decision_ids: [DECISION-PRIMARY-ARC]
+  generated_from_finding_ids: [F-ATTACK-PREQUEL]
+  synthetic: true
+generation_axes:
+  state: [multiple Arcs]
+  transition: [prepend]
+  ownership: [derived representative]
+  lifecycle: [later editorial change]
+  authority: [catalog editor]
+  content_variation: [prequel]
+  environment: [default card, SEO projection]
+  failure_recovery: [detect after publish]
+setup:
+  preconditions:
+    - Existing first Arc supplies the approved representative image.
+    - A prequel is added and assigned the smallest narrative order.
+  input_or_scenario: Publish the prequel while the product owner expects the existing representative image to remain.
+  evidence_available: [design rule, intended editorial operation]
+  evidence_hidden: []
+expected_result:
+  acceptable_verdicts: [concern, fail]
+  prohibited_verdicts: [pass without qualification]
+  expected_severity: high
+  expected_actions: [clarify order semantics, add explicit representative ownership or enforce policy]
+expected_trace:
+  discoveries:
+    - Ordering and representative selection are coupled.
+  mandatory_questions:
+    - Should representative presentation change when narrative order changes?
+  required_source_refs: [SRC-DESIGN#5.x]
+  prohibited_shortcuts:
+    - Assume every first Arc is representative by definition without checking product policy.
+  escalation_decisions:
+    - Escalate semantic ownership to the product owner if evidence is absent.
+  dissent_that_must_be_preserved:
+    - Redefining order as representative priority can make the current design valid under strict conditions.
+scoring:
+  material_issue_ids: [DECISION-PRIMARY-ARC]
+  false_positive_traps:
+    - Declaring explicit primary ownership mandatory even when policy proves order and representation cannot diverge.
+  false_negative_traps:
+    - Treating the change as cosmetic metadata only.
+  pass_conditions:
+    - Evaluation identifies the coupling and provides a distinguishing test or enforceable defense.

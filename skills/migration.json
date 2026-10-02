@@ -1,0 +1,13 @@
+{
+  "source_repository": "https://github.com/nakamuraraika/skills",
+  "source_commit": "2fa6aa8bd057057232059641d4c58840963ca6fa",
+  "skills": [
+    "meta/rapid-ontology-modeling",
+    "meta/evaluation-orchestrator",
+    "meta/context-specific-evaluation"
+  ],
+  "preserved_dependency_files": [
+    "apm.yml",
+    "apm.lock.yaml"
+  ]
+}

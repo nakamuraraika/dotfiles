@@ -1,0 +1,28 @@
+version: "1.0"
+finding_id: ""
+origin_agent: adversarial_extractor|advocate_extractor|blind_coverage_explorer
+origin_run_id: ""
+kind: vulnerability|validity_condition|coverage_gap|alternative|question|dissent
+blind_only_discovery: false
+independent_source_discovery: false
+subject_refs: []
+decision_refs: []
+source_refs: []
+statement: ""
+mechanism: ""
+consequence_or_value: ""
+evidence_basis: []
+evidence_required: []
+epistemic_class: observation|interpretation|assumption|hypothesis|decision|constraint|unknown
+confidence: low|medium|high
+conditions_hold: []
+conditions_fail: []
+counterexample_or_support: []
+action_or_test: []
+related_finding_ids: []
+dissent_with_finding_ids: []
+dedup_signature:
+  claim_or_invariant: ""
+  mechanism: ""
+  consequence: ""
+  evidence_basis: ""

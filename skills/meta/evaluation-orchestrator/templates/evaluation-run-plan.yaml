@@ -1,0 +1,33 @@
+version: "1.0"
+run_id: ""
+evaluation_id: ""
+source_snapshot_id: ""
+ir_revision: 1
+
+inputs:
+  source_materials: []
+  evaluation_ir: work/evaluation-ir.v1.yaml
+  integrated_findings: work/findings.integrated.yaml
+  evaluation_cases: work/evaluation-cases/
+
+execution_policy:
+  evaluator_role: ""
+  non_goals: []
+  evidence_access: []
+  hidden_inputs: []
+  epistemic_policy: ""
+  severity_policy: ""
+  stop_conditions: []
+
+procedure:
+  - step_id: STEP-001
+    operation: ""
+    linked_decision_ids: []
+    required_evidence: []
+    output_contract: ""
+
+mandatory_questions: []
+alternative_requirements: []
+counterexample_requirements: []
+completion_gate: []
+output_schema: work/final-evaluation.md

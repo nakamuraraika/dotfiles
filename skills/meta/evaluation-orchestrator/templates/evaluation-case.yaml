@@ -1,0 +1,48 @@
+version: "1.0"
+case_id: CASE-001
+title: ""
+type: normal_success|boundary|ambiguous|contradictory_evidence|incomplete_evidence|adversarial|rejected_alternative_wins|should_pass_unchanged|irreversible_failure|prior_regression|holdout
+holdout: false
+materiality: critical|high|medium|low
+
+provenance:
+  source_refs: []
+  generated_from_decision_ids: []
+  generated_from_finding_ids: []
+  synthetic: true
+
+generation_axes:
+  state: []
+  transition: []
+  ownership: []
+  lifecycle: []
+  authority: []
+  content_variation: []
+  environment: []
+  failure_recovery: []
+
+setup:
+  preconditions: []
+  input_or_scenario: ""
+  evidence_available: []
+  evidence_hidden: []
+
+expected_result:
+  acceptable_verdicts: []
+  prohibited_verdicts: []
+  expected_severity: ""
+  expected_actions: []
+
+expected_trace:
+  discoveries: []
+  mandatory_questions: []
+  required_source_refs: []
+  prohibited_shortcuts: []
+  escalation_decisions: []
+  dissent_that_must_be_preserved: []
+
+scoring:
+  material_issue_ids: []
+  false_positive_traps: []
+  false_negative_traps: []
+  pass_conditions: []

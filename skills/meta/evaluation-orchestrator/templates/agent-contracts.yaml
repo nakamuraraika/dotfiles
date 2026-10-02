@@ -1,0 +1,122 @@
+version: "1.0"
+contracts:
+  source_normalizer:
+    objective: Reconstruct the target into source-grounded evaluation IR without importing seeded conclusions.
+    required_behaviors:
+      - Read primary sources directly.
+      - Preserve unknowns, rejected alternatives, and operating rules.
+      - Create decision-centered records with provenance.
+    forbidden_behaviors:
+      - Present interpretation as observation.
+      - Optimize coverage only around seeded concerns.
+    output_schemas: [templates/source-snapshot.yaml, templates/evaluation-ir.yaml]
+
+  adversarial_extractor:
+    objective: Find falsifiable failure hypotheses, concrete counterexamples, and structural alternatives.
+    required_behaviors:
+      - Read primary sources directly; use IR only as an index.
+      - Report at least one independently sourced concern or explicitly report none found.
+      - Attach a scenario, falsifying test, or structural alternative to material criticism.
+    forbidden_behaviors:
+      - Treat source_ir_v0 as complete or authoritative over the primary source.
+      - Read advocate or blind outputs.
+    output_schemas: [templates/findings-set.yaml, templates/finding.yaml]
+
+  advocate_extractor:
+    objective: Build the strongest defensible case for the target under explicit conditions.
+    required_behaviors:
+      - Read primary sources directly; use IR only as an index.
+      - State evidence needed for each defense and where it collapses.
+      - Steelman rejected alternatives before accepting their rejection.
+    forbidden_behaviors:
+      - Treat source_ir_v0 as complete or authoritative over the primary source.
+      - Read adversarial or blind outputs.
+    output_schemas: [templates/findings-set.yaml, templates/finding.yaml]
+
+  blind_coverage_explorer:
+    objective: Discover omitted dimensions without upstream framing.
+    required_behaviors:
+      - Read only primary sources and the neutral evaluation purpose.
+      - Produce section and lifecycle coverage maps.
+    forbidden_behaviors:
+      - Read source_ir_v0, seeded concerns, or other agent findings.
+    output_schemas: [templates/findings-set.yaml, templates/finding.yaml]
+
+  finding_integrator:
+    objective: Normalize and semantically integrate findings without erasing dissent.
+    required_behaviors:
+      - Merge only equivalent claim, mechanism, consequence, and evidence bases.
+      - Mark blind-only discoveries and preserve origin IDs.
+    output_schemas: [templates/findings-set.yaml, templates/finding.yaml]
+
+  epistemic_reclassifier:
+    objective: Reclassify merged statements using the least certain defensible class.
+    required_behaviors:
+      - Verify observations against primary sources.
+      - Record every class change.
+      - Never use agent agreement as evidence of factuality.
+    output_schemas: [templates/evaluation-ir.yaml, templates/epistemic-change-log.yaml]
+
+  evaluation_case_designer:
+    objective: Generate risk-proportionate cases from explicit variation axes.
+    required_behaviors:
+      - Derive case axes from the target state space and lifecycle.
+      - Include expected result and expected trace.
+      - Keep holdout expectations hidden from planner and evaluator.
+    output_schemas: [templates/evaluation-case.yaml]
+
+  evaluation_run_planner:
+    objective: Compile IR and cases into target-specific evaluator instructions and a run plan.
+    required_behaviors:
+      - Generate questions from decision records, not a universal checklist.
+      - Require evidence, comparison, and actionability without arbitrary item counts.
+    output_schemas: [templates/evaluation-run-plan.yaml, templates/evaluation-run-instructions.md]
+
+  final_evaluator:
+    objective: Execute the fixed evaluation contract against the source target.
+    required_behaviors:
+      - Cite material claims and preserve uncertainty and dissent.
+      - Produce actionable alternatives or tests for material criticism.
+    forbidden_behaviors:
+      - Change criteria during execution.
+      - Self-certify evaluation quality.
+    output_schemas: [templates/final-evaluation.md]
+
+  blinded_evaluation_judge:
+    objective: Independently judge source fidelity, issue recall, false positives, and actionability.
+    required_behaviors:
+      - Verify claims against sources and hidden case expectations.
+      - Report threshold results and material misses.
+    forbidden_behaviors:
+      - Read evaluator self-grades or current improvement proposals.
+    output_schemas: [templates/judge-report.yaml, templates/run-trace.yaml]
+
+  failure_localizer:
+    objective: Identify the earliest stage that caused a judged evaluation failure.
+    required_behaviors:
+      - Separate root causes from downstream symptoms.
+      - Cite run-trace and judge evidence.
+      - Route repair to the earliest responsible stage.
+    output_schemas: [templates/failure-localization.yaml]
+
+  improvement_candidate_generator:
+    objective: Propose a minimal, scoped, reversible repair backed by failure evidence.
+    required_behaviors:
+      - Change the earliest responsible component rather than patching final prose.
+      - Define regression cases, comparison metrics, and rollback.
+      - Keep one-off learning provisional.
+    output_schemas: [templates/improvement-candidate.yaml]
+
+  regression_replay:
+    objective: Replay golden, boundary, prior-failure, and holdout cases against an experimental change.
+    required_behaviors:
+      - Compare quality, cost, context growth, and human intervention.
+      - Report regressions and inconclusive results.
+    output_schemas: [templates/regression-replay-report.yaml]
+
+  improvement_promotion_judge:
+    objective: Decide whether to promote, retain experimentally, reject, or roll back a candidate.
+    required_behaviors:
+      - Apply the promotion ladder and charter thresholds.
+      - Preserve rollback information.
+    output_schemas: [templates/promotion-decision.yaml]

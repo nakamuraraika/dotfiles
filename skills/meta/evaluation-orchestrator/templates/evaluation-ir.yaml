@@ -1,0 +1,164 @@
+version: "1.0"
+ir_id: ""
+revision: 0
+status: reconstructed|integrated|reclassified|published
+
+provenance:
+  source_snapshot_id: ""
+  generated_by_stage: source_normalizer
+  parent_ir: null
+  created_at: ""
+
+target:
+  identity: ""
+  version: ""
+  scope: []
+  exclusions: []
+  decision_supported: ""
+  stakeholders: []
+  consequence_summary: ""
+
+source_items:
+  - source_item_id: SI-001
+    source_ref: SRC-001#section-or-line
+    subject: ""
+    normalized_statement: ""
+    epistemic_class: observation|interpretation|assumption|hypothesis|decision|constraint|unknown
+    confidence: low|medium|high
+    direct_support: ""
+    dependencies: []
+    contradicts: []
+
+# The primary unit of evaluation. Keep the design decision, its strongest
+# attack, strongest defense, and discriminating tests in one traceable record.
+decisions:
+  - decision_id: DECISION-001
+    subject: ""
+    source_refs: []
+
+    observed_design:
+      statement: ""
+      epistemic_class: observation|interpretation|decision
+      confidence: low|medium|high
+
+    rationale:
+      statement: ""
+      source_refs: []
+      epistemic_class: observation|interpretation|assumption|unknown
+      confidence: low|medium|high
+
+    rejected_alternatives:
+      - alternative_id: ALT-001
+        statement: ""
+        rejection_reason: ""
+        source_refs: []
+        epistemic_class: observation|interpretation|unknown
+
+    invariants:
+      - invariant_id: INV-001
+        statement: ""
+        source_refs: []
+        owner: ""
+        enforcement_layer: schema|deterministic_validation|write_path|workflow|ci_lint_audit|human_review|not_enforceable
+        prevention: ""
+        detection: ""
+        repair: ""
+        violation_consequence: ""
+
+    attack:
+      hypotheses:
+        - hypothesis_id: ATTACK-001
+          statement: ""
+          mechanism: ""
+          epistemic_class: hypothesis
+          confidence: low|medium|high
+      counterexamples:
+        - case: ""
+          status: verified|needs_verification|synthetic
+          source_refs: []
+      failure_modes:
+        - trigger: ""
+          mechanism: ""
+          observable_symptom: ""
+          consequence: ""
+          detectability: high|medium|low
+          reversibility: easy|moderate|hard|irreversible
+
+    defense:
+      strongest_case:
+        - statement: ""
+          required_conditions: []
+          supporting_evidence: []
+      collapse_conditions: []
+      residual_risk: ""
+
+    verification:
+      questions: []
+      distinguishing_tests:
+        - test_id: TEST-001
+          procedure: ""
+          observation_supporting_current: ""
+          observation_supporting_change: ""
+      missing_evidence: []
+      escalation_owner: ""
+
+    candidate_alternatives:
+      - alternative_id: CANDIDATE-001
+        name: ""
+        structural_difference: ""
+        benefits: []
+        costs: []
+        migration_or_adoption: ""
+        distinguishing_conditions: []
+
+    current_assessment:
+      status: supported|concern|failed|undetermined
+      severity: critical|high|medium|low|informational
+      confidence: low|medium|high
+      dissent_finding_ids: []
+      linked_finding_ids: []
+
+evaluation_dimensions:
+  - dimension_id: DIM-001
+    name: ""
+    purpose: ""
+    linked_decision_ids: []
+    evidence_required: []
+    anchors:
+      pass: ""
+      concern: ""
+      fail: ""
+    severity_mapping: ""
+    blind_spots: []
+    enabled_actions: []
+
+case_generation_axes:
+  state_dimensions: []
+  transition_dimensions: []
+  ownership_dimensions: []
+  lifecycle_dimensions: []
+  authority_dimensions: []
+  content_variation_dimensions: []
+  distribution_or_environment_dimensions: []
+  failure_recovery_dimensions: []
+  combination_strategy: pairwise|risk_based|full_cross_product|custom
+  selection_rationale: ""
+
+decision_boundaries:
+  - boundary_id: BOUNDARY-001
+    decision_id: DECISION-001
+    current_option: ""
+    supporting_conditions: []
+    evidence_against: []
+    would_flip_if: []
+    distinguishing_test_ids: []
+    authority: ""
+
+failure_modes: []
+ambiguity_ledger: []
+operational_enforceability: []
+actionability_requirements: []
+evaluation_case_refs: []
+integrated_finding_refs: []
+blind_only_discovery_refs: []
+unresolved_dissent: []

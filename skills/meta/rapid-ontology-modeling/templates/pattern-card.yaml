@@ -1,0 +1,21 @@
+id:
+name:
+type: pattern
+status: observation
+problem:
+context:
+forces: []
+solution:
+applicable_when: []
+not_applicable_when: []
+consequences:
+  positive: []
+  negative: []
+detection_signals: []
+counterexamples: []
+related_patterns: []
+related_antipatterns: []
+evidence:
+  occurrences: 0
+  domains: []
+  confidence: low

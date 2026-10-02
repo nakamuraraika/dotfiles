@@ -1,0 +1,58 @@
+version: "1.0"
+source_snapshot:
+  immutable: true
+  snapshot_id: ""
+  primary_source_bindings: []
+
+agents:
+  - id: reconstructor
+    stage_id: source_normalizer
+    purpose: Reconstruct source-grounded decision records.
+    visible_inputs: [source_materials, evaluation_charter]
+    hidden_inputs: [seeded_concerns, downstream_outputs]
+    output_contract: templates/evaluation-ir.yaml
+    may_modify: [source_ir_v0]
+    forbidden_actions: [promote_interpretation_to_observation, optimize_only_for_seeded_concerns]
+    failure_risk_addressed: provenance_loss
+
+  - id: adversary
+    stage_id: adversarial_extractor
+    purpose: Find falsifiable vulnerabilities and structural alternatives.
+    visible_inputs: [source_materials, source_snapshot_manifest, evaluation_charter, source_ir_v0]
+    hidden_inputs: [advocate_findings, blind_findings]
+    output_contract: templates/finding.yaml
+    may_modify: [adversarial_findings]
+    forbidden_actions: [treat_ir_as_authoritative_over_source]
+    failure_risk_addressed: unchallenged_assumptions
+
+  - id: advocate
+    stage_id: advocate_extractor
+    purpose: Construct the strongest validity conditions and defenses.
+    visible_inputs: [source_materials, source_snapshot_manifest, evaluation_charter, source_ir_v0]
+    hidden_inputs: [adversarial_findings, blind_findings]
+    output_contract: templates/finding.yaml
+    may_modify: [advocate_findings]
+    forbidden_actions: [treat_ir_as_authoritative_over_source]
+    failure_risk_addressed: adversary_only_distortion
+
+  - id: blind_explorer
+    stage_id: blind_coverage_explorer
+    purpose: Discover omissions without upstream framing.
+    visible_inputs: [source_materials, source_snapshot_manifest, neutral_evaluation_purpose]
+    hidden_inputs: [source_ir_v0, seeded_concerns, adversarial_findings, advocate_findings, evaluation_run_instructions]
+    output_contract: templates/finding.yaml
+    may_modify: [blind_findings]
+    forbidden_actions: [read_seeded_concerns, read_upstream_interpretations]
+    failure_risk_addressed: upstream_framing_amplification
+
+reveal_sequence:
+  - source_normalizer outputs remain hidden from blind_explorer.
+  - parallel findings are revealed only to finding_integrator after all three paths terminate.
+  - holdout expectations are revealed only to blinded_evaluation_judge and regression_replay.
+
+independence_checks:
+  - immutable_input_snapshot
+  - no_visible_hidden_overlap
+  - no_cross_agent_visibility_in_parallel_group
+  - blind_path_has_no_seeded_or_ir_inputs
+  - adversary_and_advocate_confirm_direct_primary_source_read

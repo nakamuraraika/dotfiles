@@ -1,0 +1,21 @@
+version: "1.0"
+run_id: ""
+verdict: pass|repair|escalate
+threshold_results:
+  - metric: ""
+    observed: null
+    required: null
+    passed: false
+metrics:
+  source_fidelity: null
+  unsupported_claim_rate: null
+  material_issue_recall: null
+  material_false_positive_rate: null
+  actionability_rate: null
+  blind_only_discovery_count: null
+material_misses: []
+false_positives: []
+unsupported_claims: []
+dissent_preservation_failures: []
+case_results: []
+repair_required: []

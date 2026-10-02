@@ -1,0 +1,10 @@
+version: "1.0"
+run_id: ""
+candidate_id: ""
+decision: promote|retain_experimental|reject|rollback
+current_scope: current_run|target_specific|cross_target|core_invariant
+next_scope: ""
+evidence_refs: []
+threshold_results: []
+rationale: ""
+rollback_ref: ""

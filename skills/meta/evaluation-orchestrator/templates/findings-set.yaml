@@ -1,0 +1,10 @@
+version: "1.0"
+run_id: ""
+stream: adversarial|advocate|blind|integrated
+generated_by_stage: ""
+source_snapshot_id: ""
+findings: []
+dedup_clusters: []
+dissent_links: []
+blind_only_finding_ids: []
+coverage_report: {}

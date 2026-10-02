@@ -1,0 +1,10 @@
+version: "1.0"
+run_id: ""
+changes:
+  - item_ref: ""
+    from_class: observation|interpretation|assumption|hypothesis|decision|constraint|unknown
+    to_class: observation|interpretation|assumption|hypothesis|decision|constraint|unknown
+    reason: ""
+    source_refs: []
+    origin_finding_ids: []
+    consensus_was_ignored_as_fact_evidence: false

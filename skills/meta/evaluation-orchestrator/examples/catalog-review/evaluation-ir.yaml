@@ -1,0 +1,154 @@
+version: "1.0"
+ir_id: catalog-review-ir
+revision: 1
+status: reclassified
+provenance:
+  source_snapshot_id: sha256:example
+  generated_by_stage: epistemic_reclassifier
+  parent_ir: catalog-review-ir-v0
+  created_at: "2026-07-10T00:00:00Z"
+target:
+  identity: catalog-model-design
+  version: draft-7
+  scope: [representative Arc derivation]
+  exclusions: []
+  decision_supported: Approve or revise representative metadata ownership.
+  stakeholders: [catalog editor, application developer]
+  consequence_summary: Ordering changes may unintentionally alter presentation identity.
+source_items:
+  - source_item_id: SI-PRIMARY-ARC
+    source_ref: SRC-DESIGN#5.x
+    subject: primary Arc selection
+    normalized_statement: The Work derives representative display metadata from the Arc with the smallest order.
+    epistemic_class: observation
+    confidence: high
+    direct_support: Explicit design rule.
+    dependencies: []
+    contradicts: []
+decisions:
+  - decision_id: DECISION-PRIMARY-ARC
+    subject: representative Arc selection
+    source_refs: [SRC-DESIGN#5.x]
+    observed_design:
+      statement: Derive the representative Arc from the Arc with minimum order.
+      epistemic_class: decision
+      confidence: high
+    rationale:
+      statement: Avoid duplicated mutable state such as Work.primary_arc_id.
+      source_refs: [SRC-DESIGN#6.x]
+      epistemic_class: observation
+      confidence: high
+    rejected_alternatives:
+      - alternative_id: ALT-EXPLICIT-PRIMARY
+        statement: Store Work.primary_arc_id explicitly.
+        rejection_reason: Duplicates state and can drift from ordering.
+        source_refs: [SRC-DESIGN#6.x]
+        epistemic_class: observation
+    invariants:
+      - invariant_id: INV-ORDER-REPRESENTATIVE
+        statement: The minimum-order Arc is always suitable as representative presentation metadata.
+        source_refs: []
+        owner: catalog editing policy
+        enforcement_layer: workflow
+        prevention: Editing workflow must reject order changes that violate representative suitability.
+        detection: Audit cards and SEO projections after ordering changes.
+        repair: Restore prior order or select explicit representative metadata.
+        violation_consequence: Unintended display and identity changes.
+    attack:
+      hypotheses:
+        - hypothesis_id: ATTACK-PREQUEL-INSERT
+          statement: Inserting a newly published prequel at the beginning changes representative metadata unintentionally.
+          mechanism: One field encodes both sequence and representative priority.
+          epistemic_class: hypothesis
+          confidence: high
+      counterexamples:
+        - case: Insert a prequel with lower order while retaining the existing campaign visual.
+          status: synthetic
+          source_refs: []
+      failure_modes:
+        - trigger: A prequel is inserted before the current first Arc.
+          mechanism: Representative selection is recomputed from order.
+          observable_symptom: Work card and SEO image change without an explicit presentation decision.
+          consequence: Published presentation identity changes unexpectedly.
+          detectability: medium
+          reversibility: moderate
+    defense:
+      strongest_case:
+        - statement: Define order as representative priority rather than narrative order.
+          required_conditions: [All editors understand the definition, APIs enforce the first Arc constraints]
+          supporting_evidence: [write-path invariant test]
+      collapse_conditions: [Users require narrative ordering independent of representative presentation]
+      residual_risk: The overloaded meaning remains difficult to communicate and migrate.
+    verification:
+      questions:
+        - Does order mean narrative order, publication order, or representative priority?
+        - Is changing representative metadata an explicit business operation?
+      distinguishing_tests:
+        - test_id: TEST-PREQUEL-INSERT
+          procedure: Insert a prequel and observe whether presentation should remain stable.
+          observation_supporting_current: Product policy requires the new first Arc to become representative.
+          observation_supporting_change: Product policy requires presentation to stay unchanged.
+      missing_evidence: [catalog edit history showing reorder and representative changes]
+      escalation_owner: product owner
+    candidate_alternatives:
+      - alternative_id: CANDIDATE-EXPLICIT-PRIMARY
+        name: Work.primary_arc_id
+        structural_difference: Separates representative ownership from Arc ordering.
+        benefits: [explicit operation, stable presentation]
+        costs: [additional invariant and migration]
+        migration_or_adoption: Backfill from current minimum-order Arc, then require explicit updates.
+        distinguishing_conditions: [representative changes independently of narrative order]
+      - alternative_id: CANDIDATE-PRESENTATION-POLICY
+        name: PresentationPolicy
+        structural_difference: Moves representative selection into an explicit presentation policy object.
+        benefits: [supports campaign-specific selection, preserves domain ordering]
+        costs: [more concepts and configuration]
+        migration_or_adoption: Introduce default policy matching current derivation, then allow overrides.
+        distinguishing_conditions: [multiple presentation contexts exist]
+    current_assessment:
+      status: concern
+      severity: high
+      confidence: medium
+      dissent_finding_ids: [F-DEFENSE-ORDER-AS-PRIORITY]
+      linked_finding_ids: [F-ATTACK-PREQUEL, F-DEFENSE-ORDER-AS-PRIORITY]
+evaluation_dimensions:
+  - dimension_id: DIM-SEMANTIC-OWNERSHIP
+    name: Semantic ownership
+    purpose: Ensure one field does not silently own unrelated business decisions.
+    linked_decision_ids: [DECISION-PRIMARY-ARC]
+    evidence_required: [field definition, edit workflows, invariant enforcement]
+    anchors:
+      pass: Ordering and representative selection have one documented meaning and enforced lifecycle.
+      concern: Meanings coincide today but independent change is plausible.
+      fail: Real workflows require independent change and no explicit mechanism exists.
+    severity_mapping: High when published identity changes implicitly.
+    blind_spots: [future campaign contexts]
+    enabled_actions: [separate state, add policy, strengthen workflow invariant]
+case_generation_axes:
+  state_dimensions: [one Arc, multiple Arcs]
+  transition_dimensions: [prepend, reorder, split, merge]
+  ownership_dimensions: [derived, explicit, policy-owned]
+  lifecycle_dimensions: [initial import, later editorial change, migration]
+  authority_dimensions: [automated import, editor, product policy]
+  content_variation_dimensions: [prequel, compilation, alternate cut]
+  distribution_or_environment_dimensions: [default card, campaign card, SEO projection]
+  failure_recovery_dimensions: [detect before publish, detect after publish, rollback]
+  combination_strategy: risk_based
+  selection_rationale: Prioritize transitions that alter published presentation without explicit intent.
+decision_boundaries:
+  - boundary_id: BOUNDARY-PRIMARY-ARC
+    decision_id: DECISION-PRIMARY-ARC
+    current_option: minimum order derivation
+    supporting_conditions: [ordering and representative priority never diverge]
+    evidence_against: [independent campaign selection requirement]
+    would_flip_if: [prequel insertion should not change presentation]
+    distinguishing_test_ids: [TEST-PREQUEL-INSERT]
+    authority: product owner
+failure_modes: []
+ambiguity_ledger: []
+operational_enforceability: []
+actionability_requirements: [resolve order semantics before implementation]
+evaluation_case_refs: [CASE-PRIMARY-ARC]
+integrated_finding_refs: [F-ATTACK-PREQUEL, F-DEFENSE-ORDER-AS-PRIORITY]
+blind_only_discovery_refs: []
+unresolved_dissent: [Whether order may be redefined as representative priority without harming narrative workflows]
